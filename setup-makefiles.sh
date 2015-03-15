@@ -233,7 +233,7 @@ EOF
 
 LOCAL_PATH := \$(call my-dir)
 
-ifneq (\$(filter hlte hltespr hlteusc hltevzw hltekdi,\$(TARGET_DEVICE)),)
+ifneq (\$(filter hlte hltespr hltetmo hlteusc hltevzw hltekdi hltedcm,\$(TARGET_DEVICE)),)
 
 include \$(CLEAR_VARS)
 LOCAL_MODULE := PPPreference
