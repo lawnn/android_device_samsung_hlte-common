@@ -1,5 +1,27 @@
 LOCAL_PATH := $(call my-dir)
 
+
+ifdef TARGET_PREBUILT_KERNEL
+recovery_kernel := $(TOP)/$(TARGET_PREBUILT_KERNEL)
+INTERNAL_RECOVERYIMAGE_ARGS := \
+	--kernel $(recovery_kernel) \
+	--ramdisk $(recovery_ramdisk)
+INTERNAL_RECOVERYIMAGE_ARGS += --cmdline "$(BOARD_KERNEL_CMDLINE)"
+INTERNAL_RECOVERYIMAGE_ARGS += --base $(BOARD_KERNEL_BASE)
+BOARD_KERNEL_PAGESIZE := $(strip $(BOARD_KERNEL_PAGESIZE))
+INTERNAL_RECOVERYIMAGE_ARGS += --pagesize $(BOARD_KERNEL_PAGESIZE)
+INTERNAL_RECOVERYIMAGE_ARGS += --dt $(TOP)/$(TARGET_PREBUILT_DT)
+
+## Overload recoveryimg generation: Same as the original, + --dt arg
+$(INSTALLED_RECOVERYIMAGE_TARGET): $(MKBOOTIMG)  \
+		$(recovery_ramdisk) 
+	@echo -e ${CL_CYN}"----- Making recovery image by using prebuilt kernel ------"${CL_RST}
+	$(hide) $(MKBOOTIMG) $(INTERNAL_RECOVERYIMAGE_ARGS) $(BOARD_MKBOOTIMG_ARGS)  --output $@
+	$(hide) $(call assert-max-image-size,$@,$(BOARD_RECOVERYIMAGE_PARTITION_SIZE),raw)
+	@echo -e ${CL_CYN}"Made recovery image: $@"${CL_RST}
+
+
+else
 ## Don't change anything under here. The variables are named G2_whatever
 ## on purpose, to avoid conflicts with similarly named variables at other
 ## parts of the build environment
@@ -43,6 +65,7 @@ $(INSTALLED_BOOTIMAGE_TARGET): $(MKBOOTIMG) $(INTERNAL_BOOTIMAGE_FILES) $(INSTAL
 	$(hide) $(call assert-max-image-size,$@,$(BOARD_BOOTIMAGE_PARTITION_SIZE),raw)
 	@echo -e ${CL_CYN}"Made boot image: $@"${CL_RST}
 
+
 ## Overload recoveryimg generation: Same as the original, + --dt arg
 $(INSTALLED_RECOVERYIMAGE_TARGET): $(MKBOOTIMG) $(INSTALLED_DTIMAGE_TARGET) \
 		$(recovery_ramdisk) \
@@ -51,3 +74,5 @@ $(INSTALLED_RECOVERYIMAGE_TARGET): $(MKBOOTIMG) $(INSTALLED_DTIMAGE_TARGET) \
 	$(hide) $(MKBOOTIMG) $(INTERNAL_RECOVERYIMAGE_ARGS) $(BOARD_MKBOOTIMG_ARGS) --dt $(INSTALLED_DTIMAGE_TARGET) --output $@
 	$(hide) $(call assert-max-image-size,$@,$(BOARD_RECOVERYIMAGE_PARTITION_SIZE),raw)
 	@echo -e ${CL_CYN}"Made recovery image: $@"${CL_RST}
+
+endif
