@@ -1,6 +1,3 @@
-# Art
-dalvik.vm.dex2oat-swap=false
-
 # Audio
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.audio.fluence.speaker=true \
@@ -45,25 +42,28 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Radio
 PRODUCT_PROPERTY_OVERRIDES += \
-    persist.data.netmgrd.qos.enable=true \
+    persist.timed.enable=true \
+    persist.radio.apm_sim_not_pwdn=1 \
+    persist.radio.no_wait_for_card=1 \
     persist.radio.add_power_save=1 \
-    persist.radio.lte_vrat_report=1 \
-    persist.radio.mode_pref_nv10=1 
+    persist.eons.enabled=false \
+    persist.radio.use_se_table_only=1 \
+    ro.use_data_netmgrd=false \
+    persist.data.netmgrd.qos.enable=false \
+    persist.telephony.mpdn=false \
+    persist.radio.dcmlte=true \
+    persist.radio.prevmcc=440 \
+    persist.radio.setnwkmode=9 \
+    persist.radio.forced_succ_ack=false \
+    persist.radio.default_wappush=true \
+    ro.telephony.default_network=0 \
+    telephony.lteOnCdmaDevice=0 \
+    ro.telephony.ril_class=hltedcmRIL
 
 # Sensors
 PRODUCT_PROPERTY_OVERRIDES += \
     debug.sensors=1
 
-# Tethering
-PRODUCT_PROPERTY_OVERRIDES += \
-    net.tethering.noprovisioning=true
-
 # Wifi
 PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0
-
-# Radio
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.ril.telephony.mqanelements=6 \
-    ro.telephony.ril_class=hlteRIL \
-    persist.data.qmi.adb_logmask=0

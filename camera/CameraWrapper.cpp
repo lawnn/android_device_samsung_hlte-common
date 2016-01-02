@@ -70,8 +70,6 @@ camera_module_t HAL_MODULE_INFO_SYM = {
     .set_callbacks = NULL, /* remove compilation warnings */
     .get_vendor_tag_ops = NULL, /* remove compilation warnings */
     .open_legacy = NULL, /* remove compilation warnings */
-    .set_torch_mode = NULL, /* remove compilation warnings */
-    .init = NULL, /* remove compilation warnings */
     .reserved = {0}, /* remove compilation warnings */
 };
 
@@ -453,7 +451,7 @@ int camera_dump(struct camera_device * device, int fd)
 
 extern "C" void heaptracker_free_leaked_memory(void);
 
-static int camera_device_close(hw_device_t* device)
+int camera_device_close(hw_device_t* device)
 {
     int ret = 0;
     wrapper_camera_device_t *wrapper_dev = NULL;
@@ -495,7 +493,7 @@ done:
  * so this function will always only be called once per camera instance
  */
 
-static int camera_device_open(const hw_module_t* module, const char* name,
+int camera_device_open(const hw_module_t* module, const char* name,
                 hw_device_t** device)
 {
     int rv = 0;

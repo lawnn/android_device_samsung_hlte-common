@@ -4,15 +4,7 @@
     "target_path": "device/samsung/msm8974-common"
   },
   {
-    "repository": "android_kernel_samsung_hlte",
-    "target_path": "kernel/samsung/hlte"
-  },
-  {
-    "repository": "android_external_stlport",
-    "target_path": "external/stlport"
-  },
-  {
-    "repository": "android_packages_apps_CMSPen",
-    "target_path": "packages/apps/CMSPen"
+    "repository": "android_kernel_samsung_hltedcm",
+    "target_path": "kernel/samsung/hltedcm"
   }
 ]

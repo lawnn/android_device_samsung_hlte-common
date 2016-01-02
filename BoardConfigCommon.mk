@@ -19,39 +19,36 @@ LOCAL_PATH := device/samsung/hlte-common
 
 TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 
-# Compiler
-# L1/L2 cache size parameters by @JustArchi
-BOARD_GLOBAL_CFLAGS := --param l1-cache-size=16 --param l1-cache-line-size=16 --param l2-cache-size=2048
 
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := MSM8974
 
 # Kernel
-BOARD_CUSTOM_BOOTIMG_MK := $(LOCAL_PATH)/mkbootimg.mk
 BOARD_KERNEL_BASE := 0x00000000
-BOARD_KERNEL_CMDLINE := console=null androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x3F androidboot.bootdevice=msm_sdcc.1 androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE := console=null androidboot.hardware=qcom androidboot.selinux=permissive user_debug=31 msm_rtb.filter=0x3F androidboot.bootdevice=msm_sdcc.1
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_KERNEL_SEPARATED_DT := true
-BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x02900000 --tags_offset 0x02700000
-TARGET_KERNEL_CONFIG := msm8974_sec_defconfig
-TARGET_KERNEL_SELINUX_CONFIG := selinux_defconfig
-TARGET_KERNEL_VARIANT_CONFIG := kbc_aosp_defconfig
-TARGET_KERNEL_SOURCE := kernel/samsung/hlte
-
-#TARGET_KERNEL_CROSS_COMPILE_PREFIX := arm-linux-androideabi-
-TARGET_KERNEL_HAVE_EXFAT := true
+BOARD_CUSTOM_BOOTIMG_MK := $(LOCAL_PATH)/mkbootimg.mk
+BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x02000000 --tags_offset 0x01e00000
+TARGET_KERNEL_CONFIG := cm_msm8974_sec_defconfig
+TARGET_KERNEL_VARIANT_CONFIG := cm_msm8974_sec_hlte_dcm_defconfig
+TARGET_KERNEL_SELINUX_CONFIG := cm_selinux_defconfig
+TARGET_KERNEL_SOURCE := kernel/samsung/hltedcm
 
 # Audio
 QCOM_CSDCLIENT_ENABLED := false
-AUDIO_FEATURE_LOW_LATENCY_PRIMARY := false
-AUDIO_FEATURE_ENABLED_HWDEP_CAL := false
-AUDIO_FEATURE_ENABLED_LOW_LATENCY_CAPTURE := false
+AUDIO_FEATURE_LOW_LATENCY_PRIMARY := true
+AUDIO_FEATURE_ENABLED_HWDEP_CAL := true
+AUDIO_FEATURE_ENABLED_LOW_LATENCY_CAPTURE := true
 
 # Bluetooth
 BOARD_BLUEDROID_VENDOR_CONF := $(LOCAL_PATH)/bluetooth/vnd_hlte.txt
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
 BOARD_BLUETOOTH_USES_HCIATTACH_PROPERTY := false
 BOARD_HAVE_BLUETOOTH_BCM := true
+
+# ANT+
+BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
 
 # Camera
 TARGET_PROVIDES_CAMERA_HAL := true
@@ -61,8 +58,16 @@ USE_DEVICE_SPECIFIC_CAMERA := true
 BOARD_HARDWARE_CLASS += device/samsung/hlte-common/cmhw
 BOARD_HARDWARE_CLASS += hardware/samsung/cmhw
 
+# GPS
+TARGET_NO_RPC := true
+TARGET_GPS_HAL_PATH := device/samsung/ks01lte/gps
+
 # RIL
-BOARD_RIL_CLASS := ../../../device/samsung/hlte-common/ril
+BOARD_RIL_CLASS := ../../../device/samsung/hltedcm/ril
+
+# GPS
+TARGET_NO_RPC := true
+TARGET_GPS_HAL_PATH := device/samsung/hltedcm/gps
 
 # Graphics
 TARGET_HAVE_NEW_GRALLOC := true
@@ -71,30 +76,36 @@ TARGET_HAVE_NEW_GRALLOC := true
 TARGET_PROVIDES_LIBLIGHT := true
 
 # NFC
-BOARD_NFC_HAL_SUFFIX := msm8974
+#BOARD_NFC_HAL_SUFFIX := msm8974
 
-# Use HW crypto for ODE
-TARGET_HW_DISK_ENCRYPTION := true
+# Partitions
+BOARD_FLASH_BLOCK_SIZE := 131072
+TARGET_USERIMAGES_USE_EXT4 := true
+TARGET_USERIMAGES_USE_F2FS := true
+BOARD_BOOTIMAGE_PARTITION_SIZE := 11534336
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 13631488
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2480344064
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 28273097728 # 28273114112 - 16384
+BOARD_CACHEIMAGE_PARTITION_SIZE := 322122752
 
 # Power HAL
 TARGET_POWERHAL_VARIANT := qcom
 TARGET_POWERHAL_SET_INTERACTIVE_EXT := $(LOCAL_PATH)/power/power_ext.c
 
 # Recovery
+TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/etc/fstab.qcom
+BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_23x41.h\"
+BOARD_USES_MMCUTILS := true
 BOARD_HAS_LARGE_FILESYSTEM := true
+BOARD_HAS_DOWNLOAD_MODE := true
 BOARD_HAS_NO_MISC_PARTITION := true
 BOARD_HAS_NO_SELECT_BUTTON := true
-BOARD_USES_MMCUTILS := true
-TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/etc/fstab.qcom
-TARGET_USERIMAGES_USE_EXT4 := true
-TARGET_USERIMAGES_USE_F2FS := true
+BOARD_RECOVERY_SWIPE := true
 
 # SELinux
 -include device/qcom/sepolicy/sepolicy.mk
-#BOARD_SEPOLICY_DIRS += device/samsung/hlte-common/sepolicy
-
-# Sensors
-TARGET_NO_SENSOR_PERMISSION_CHECK := true
+BOARD_SEPOLICY_UNION += macloader.te
+BOARD_SEPOLICY_DIRS += device/samsung/hltedcm/sepolicy
 
 # Wifi
 BOARD_HAVE_SAMSUNG_WIFI := true
@@ -111,39 +122,5 @@ WIFI_DRIVER_FW_PATH_PARAM   := "/sys/module/dhd/parameters/firmware_path"
 WIFI_DRIVER_FW_PATH_STA     := "/system/etc/wifi/bcmdhd_sta.bin"
 WIFI_DRIVER_FW_PATH_AP      := "/system/etc/wifi/bcmdhd_apsta.bin"
 
-# TWRP
-ifeq ($(TARGET_RECOVERY),twrp)
-DEVICE_RESOLUTION := 1080x1920
-RECOVERY_SDCARD_ON_DATA := true
-BOARD_HAS_NO_REAL_SDCARD := true
-RECOVERY_GRAPHICS_USE_LINELENGTH := true
-TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
-TW_THEME := portrait_hdpi
-TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
-TW_MAX_BRIGHTNESS := 255
-TW_INTERNAL_STORAGE_PATH := "/data/media/0"
-TW_INTERNAL_STORAGE_MOUNT_POINT := "data"
-TW_EXTERNAL_STORAGE_PATH := "/external_sd"
-TW_EXTERNAL_STORAGE_MOUNT_POINT := "external_sd"
-TW_NO_REBOOT_BOOTLOADER := true
-TW_HAS_DOWNLOAD_MODE := true
-TW_INCLUDE_CRYPTO := true
-TW_INCLUDE_CRYPTO_SAMSUNG := true
-TW_CRYPTO_FS_TYPE := "ext4"
-TW_CRYPTO_REAL_BLKDEV := "/dev/block/mmcblk0p25"
-TW_CRYPTO_MNT_POINT := "/data"
-TW_CRYPTO_FS_OPTIONS := "nosuid,nodev,noatime,noauto_da_alloc,discard,journal_async_commit,errors=panic"
-TW_CRYPTO_FS_FLAGS := "0x00000406"
-TW_CRYPTO_KEY_LOC := "footer"
-#TW_NO_EXFAT_FUSE := true
-#TW_NO_EXFAT := true
-TARGET_RECOVERY_QCOM_RTC_FIX := true
-#TW_MTP_DEVICE := "/dev/usb_mtp_gadget"
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/msm_dwc3/f9200000.dwc3/gadget/lun0/file
-
-TW_TARGET_RECOVERY_FSTAB := ../../../device/samsung/hlte-common/twrp.fstab
-else
-BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_23x41.h\"
-BOARD_RECOVERY_SWIPE := true
-endif
-
+# inherit from the proprietary version
+-include vendor/samsung/hlte-common/BoardConfigVendor.mk
