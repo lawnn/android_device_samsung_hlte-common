@@ -60,10 +60,6 @@ USE_DEVICE_SPECIFIC_CAMERA := true
 BOARD_HARDWARE_CLASS += device/samsung/hlte-common/cmhw
 BOARD_HARDWARE_CLASS += hardware/samsung/cmhw
 
-# GPS
-TARGET_NO_RPC := true
-TARGET_GPS_HAL_PATH := device/samsung/ks01lte/gps
-
 # RIL
 BOARD_RIL_CLASS := ../../../device/samsung/hltedcm/ril
 
