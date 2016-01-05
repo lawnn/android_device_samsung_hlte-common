@@ -134,6 +134,12 @@ PRODUCT_PACKAGES += \
     init.target.rc \
     ueventd.qcom.rc
 
+# TWRP
+ifeq ($(TARGET_RECOVERY),twrp)
+RODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/twrp.fstab:recovery/root/etc/twrp.fstab
+endif
+
 # Thermal
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/thermal-engine-8974.conf:system/etc/thermal-engine-8974.conf
