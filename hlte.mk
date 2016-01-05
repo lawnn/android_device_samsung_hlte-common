@@ -103,11 +103,21 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml
 
 # NFC
+ifeq ($(DEVICE_NFC_SONY),yes)
+PRODUCT_PACKAGES += \
+    com.android.nfc_extras \
+    NfcSony \
+    Tag
+else
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml
+
 PRODUCT_PACKAGES += \
     com.android.nfc_extras \
     NfcNci \
     nfc_nci.bcm2079x.msm8974 \
     Tag
+endif
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/nfcee_access.xml:system/etc/nfcee_access.xml \
