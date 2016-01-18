@@ -23,6 +23,9 @@ TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := MSM8974
 
+# Build with Clang by default
+USE_CLANG_PLATFORM_BUILD := true
+
 # init.rc
 TARGET_PROVIDES_INIT_RC := true
 
