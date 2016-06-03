@@ -43,6 +43,25 @@ $(INSTALLED_BOOTIMAGE_TARGET): $(MKBOOTIMG) $(INTERNAL_BOOTIMAGE_FILES) $(INSTAL
 	$(hide) $(call assert-max-image-size,$@,$(BOARD_BOOTIMAGE_PARTITION_SIZE),raw)
 	@echo -e ${CL_CYN}"Made boot image: $@"${CL_RST}
 
+ifeq ($(TARGET_RECOVERY),twrp)
+FLASHABLE_RECOVERYIMAGE_TARGET=twrp-$(TWRP_VERSION)-$(TARGET_DEVICE)
+
+$(INSTALLED_RECOVERYIMAGE_TARGET): $(MKBOOTIMG) $(INSTALLED_DTIMAGE_TARGET) \
+		$(recovery_ramdisk) \
+		$(recovery_kernel)
+		$(call build-recoveryimage-target, $@)
+	@echo -e ${CL_CYN}"----- Making recovery image ------"${CL_RST}
+	$(MKBOOTIMG) $(INTERNAL_RECOVERYIMAGE_ARGS) $(BOARD_MKBOOTIMG_ARGS) --dt $(INSTALLED_DTIMAGE_TARGET) --output $@
+	$(hide) $(call assert-max-image-size,$@,$(BOARD_RECOVERYIMAGE_PARTITION_SIZE),raw)
+	@echo "Made SEANDROIDENFORCE image: $@ -------"
+	$(hide) echo -n "SEANDROIDENFORCE" >> $(INSTALLED_RECOVERYIMAGE_TARGET)
+	@echo -e ${CL_CYN}"----- Making odin3 recovery tar.md5 ------"${CL_RST}
+	$(hide) tar -C $(PRODUCT_OUT) -H ustar -c recovery.img > $(FLASHABLE_RECOVERYIMAGE_TARGET)-odin.tar
+	$(hide) md5sum -t $(FLASHABLE_RECOVERYIMAGE_TARGET)-odin.tar >> $(FLASHABLE_RECOVERYIMAGE_TARGET)-odin.tar
+	$(hide) mv $(FLASHABLE_RECOVERYIMAGE_TARGET)-odin.tar $(PRODUCT_OUT)/$(FLASHABLE_RECOVERYIMAGE_TARGET)-odin.tar.md5
+	@echo -e ${CL_CYN}"Made odin3 flashable image: $(PRODUCT_OUT)/$(FLASHABLE_RECOVERYIMAGE_TARGET)-odin.tar.md5"${CL_RST}
+else
+
 ## Overload recoveryimg generation: Same as the original, + --dt arg
 $(INSTALLED_RECOVERYIMAGE_TARGET): $(MKBOOTIMG) $(INSTALLED_DTIMAGE_TARGET) \
 		$(recovery_ramdisk) \
@@ -52,3 +71,4 @@ $(INSTALLED_RECOVERYIMAGE_TARGET): $(MKBOOTIMG) $(INSTALLED_DTIMAGE_TARGET) \
 	$(hide) $(MKBOOTIMG) $(INTERNAL_RECOVERYIMAGE_ARGS) $(BOARD_MKBOOTIMG_ARGS) --dt $(INSTALLED_DTIMAGE_TARGET) --output $@
 	$(hide) $(call assert-max-image-size,$@,$(BOARD_RECOVERYIMAGE_PARTITION_SIZE),raw)
 	@echo -e ${CL_CYN}"Made recovery image: $@"${CL_RST}
+endif

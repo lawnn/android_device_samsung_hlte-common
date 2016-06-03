@@ -113,8 +113,6 @@ WIFI_DRIVER_FW_PATH_AP      := "/system/etc/wifi/bcmdhd_apsta.bin"
 
 # TWRP
 ifeq ($(TARGET_RECOVERY),twrp)
-BOARD_CUSTOM_BOOTIMG_MK := $(LOCAL_PATH)/mkbootimg_twrp.mk
-
 DEVICE_RESOLUTION := 1080x1920
 RECOVERY_SDCARD_ON_DATA := true
 BOARD_HAS_NO_REAL_SDCARD := true
