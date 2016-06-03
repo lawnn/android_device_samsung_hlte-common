@@ -37,6 +37,7 @@ TARGET_KERNEL_CONFIG := msm8974_sec_defconfig
 TARGET_KERNEL_SELINUX_CONFIG := selinux_defconfig
 TARGET_KERNEL_VARIANT_CONFIG := kbc_aosp_defconfig
 TARGET_KERNEL_SOURCE := kernel/samsung/hlte
+
 #TARGET_KERNEL_CROSS_COMPILE_PREFIX := arm-linux-androideabi-
 TARGET_KERNEL_HAVE_EXFAT := true
 
@@ -83,8 +84,6 @@ TARGET_POWERHAL_SET_INTERACTIVE_EXT := $(LOCAL_PATH)/power/power_ext.c
 BOARD_HAS_LARGE_FILESYSTEM := true
 BOARD_HAS_NO_MISC_PARTITION := true
 BOARD_HAS_NO_SELECT_BUTTON := true
-BOARD_RECOVERY_SWIPE := true
-BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_23x41.h\"
 BOARD_USES_MMCUTILS := true
 TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/etc/fstab.qcom
 TARGET_USERIMAGES_USE_EXT4 := true
@@ -114,6 +113,8 @@ WIFI_DRIVER_FW_PATH_AP      := "/system/etc/wifi/bcmdhd_apsta.bin"
 
 # TWRP
 ifeq ($(TARGET_RECOVERY),twrp)
+BOARD_CUSTOM_BOOTIMG_MK := $(LOCAL_PATH)/mkbootimg_twrp.mk
+
 DEVICE_RESOLUTION := 1080x1920
 RECOVERY_SDCARD_ON_DATA := true
 BOARD_HAS_NO_REAL_SDCARD := true
@@ -143,5 +144,8 @@ TARGET_RECOVERY_QCOM_RTC_FIX := true
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/msm_dwc3/f9200000.dwc3/gadget/lun0/file
 
 TW_TARGET_RECOVERY_FSTAB := ../../../device/samsung/hlte-common/twrp.fstab
+else
+BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_23x41.h\"
+BOARD_RECOVERY_SWIPE := true
 endif
 
