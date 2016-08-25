@@ -17,9 +17,6 @@
 
 set -e
 
-DEVICE=hlte-common
-VENDOR=samsung
-
 # Load extract_utils and do some sanity checks
 MY_DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$MY_DIR" ]]; then MY_DIR="$PWD"; fi
@@ -33,13 +30,22 @@ if [ ! -f "$HELPER" ]; then
 fi
 . "$HELPER"
 
-# Initialize the helper
+# Initialize the helper for common device
+setup_vendor "$DEVICE_COMMON" "$VENDOR" "$CM_ROOT" true
+
+# Copyright headers and common guards
+write_headers "hlte hltespr hlteusc hltevzw hltekdi hltedcm js01lte"
+
+write_makefiles "$MY_DIR"/common-proprietary-files.txt
+
+write_footers
+
+# Reinitialize the helper for device
 setup_vendor "$DEVICE" "$VENDOR" "$CM_ROOT"
 
 # Copyright headers and guards
 write_headers
 
-write_makefiles "$MY_DIR"/proprietary-files.txt
+write_makefiles "$MY_DIR"/../$DEVICE/device-proprietary-files.txt
 
-# Finish
 write_footers

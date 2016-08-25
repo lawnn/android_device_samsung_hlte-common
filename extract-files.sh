@@ -17,9 +17,6 @@
 
 set -e
 
-DEVICE=hlte-common
-VENDOR=samsung
-
 # Load extract_utils and do some sanity checks
 MY_DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$MY_DIR" ]]; then MY_DIR="$PWD"; fi
@@ -49,9 +46,14 @@ else
     fi
 fi
 
-# Initialize the helper
+# Initialize the helper for common device
+setup_vendor "$DEVICE_COMMON" "$VENDOR" "$CM_ROOT" true
+
+extract "$MY_DIR"/common-proprietary-files.txt "$SRC"
+
+# Reinitialize the helper for device
 setup_vendor "$DEVICE" "$VENDOR" "$CM_ROOT"
 
-extract "$MY_DIR"/proprietary-files.txt "$SRC"
+extract "$MY_DIR"/../$DEVICE/device-proprietary-files.txt "$SRC"
 
 "$MY_DIR"/setup-makefiles.sh
