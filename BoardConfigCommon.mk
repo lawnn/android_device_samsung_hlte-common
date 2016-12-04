@@ -65,7 +65,7 @@ COMMON_GLOBAL_CFLAGS += -DCAMERA_VENDOR_L_COMPAT
 BOARD_HARDWARE_CLASS += $(LOCAL_PATH)/cmhw
 
 # RIL
-BOARD_RIL_CLASS := ../../../device/samsung/hltedcm/ril
+BOARD_RIL_CLASS := ../../../device/samsung/hlte-common/ril
 
 # Graphics
 TARGET_HAVE_NEW_GRALLOC := true
@@ -130,7 +130,7 @@ endif
 
 # SELinux
 -include device/qcom/sepolicy/sepolicy.mk
-BOARD_SEPOLICY_DIRS += device/samsung/hltedcm/sepolicy
+BOARD_SEPOLICY_DIRS += device/samsung/hlte-common/sepolicy
 
 # Wifi
 BOARD_HAVE_SAMSUNG_WIFI := true
