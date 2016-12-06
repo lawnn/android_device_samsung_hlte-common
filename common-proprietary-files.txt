@@ -1,11 +1,5 @@
 # Audio
-etc/Bluetooth_cal.acdb
 etc/General_cal.acdb
-etc/Global_cal.acdb
-etc/Handset_cal.acdb
-etc/Hdmi_cal.acdb
-etc/Headset_cal.acdb
-etc/Speaker_cal.acdb
 vendor/lib/libacdbloader.so
 vendor/lib/libacdbmapper.so
 vendor/lib/libacdbrtac.so
@@ -27,9 +21,6 @@ vendor/lib/rfsa/adsp/libdspCV_skel.so
 vendor/lib/rfsa/adsp/libfastcvadsp.so
 vendor/lib/rfsa/adsp/libfastcvadsp_skel.so
 vendor/lib/rfsa/adsp/libscveT2T_skel.so
-
-# Bluetooth firmware
-vendor/firmware/bcm4335_V0105.0486.hcd
 
 # Camera chromatix
 etc/C13QL_s5k3l2xx_module_info.xml
@@ -368,16 +359,11 @@ vendor/lib/libqmi_encdec.so
 vendor/lib/libqmiservices.so
 
 # Radio
-bin/efsks
 bin/ks
-bin/qcks
 bin/qmuxd
 bin/rfs_access
 bin/rild
 bin/rmt_storage
-lib/libreference-ril.so
-lib/libril.so
-lib/libsec-ril.so
 lib/libsecnativefeature.so
 lib/libsecril-client.so
 vendor/lib/libconfigdb.so
@@ -385,9 +371,7 @@ vendor/lib/libril-qcril-hook-oem.so
 vendor/lib/libxml.so
 
 # Sensors
-lib/hw/sensors.msm8974.so
 lib/hw/sensorhubs.msm8974.so
-lib/libsensirion_h_11.so
 
 # Time services
 -app/TimeService/TimeService.apk
@@ -400,5 +384,3 @@ etc/wifi/bcmdhd_apsta.bin
 etc/wifi/bcmdhd_ibss.bin
 etc/wifi/bcmdhd_mfg.bin
 etc/wifi/bcmdhd_sta.bin
-etc/wifi/nvram_mfg.txt
-etc/wifi/nvram_net.txt
